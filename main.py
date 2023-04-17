@@ -1,49 +1,71 @@
-import operacoes
-import time
+import tkinter as tk
 
-def calculadora():
-    print("Calculadora Simples")
+def atualizar_visor(valor):
+    visor.insert(tk.END, valor)
 
-    while True:
-        print("Selecione uma operação:")
-        print("1.Soma")
-        print("2.Subtração")
-        print("3.Multiplicação")
-        print("4.Divisão")
-        print("5.Sair")
+def calcular():
+    try:
 
-        opcao = input(">>>")
-        
-        opcoes = ["1", "2", "3", "4", "5"]
-        while opcao not in opcoes:
-            opcao = input(">>>")
-        
-        if opcao == "5":
-            print("encerrando calculadora...")
-            time.sleep(2)
-            break
+        expressao = visor.get(1.0, tk.END).strip()
+        resultado = eval(expressao)
+
+        visor.delete(1.0, tk.END)
+        visor.insert(tk.END, resultado)
+
+    except Exception as e:
+        visor.delete(1.0, tk.END)
+        visor.insert(tk.END, "Erro")
+
+def limpar():
+    visor.delete(1.0, tk.END)
 
 
-        num1 = float(input("digite o primeiro numero:"))
-        num2 = float(input("digite o segundo numero:"))
+janela = tk.Tk()
 
-        if opcao == "1":
-            print("Resultado: ", operacoes.soma(num1, num2))
-            input("aperte enter para prosseguir")
-        elif opcao == "2":
-            print("Resultado: ", operacoes.subtracao(num1, num2))
-            input("aperte enter para prosseguir")
-        
-        elif opcao == "3":
-            print("Resultado: ", operacoes.multiplicacao(num1, num2))
-            input("aperte enter para prosseguir")
+janela.title("Calculadora")
 
-        elif opcao == "4":
-            print("Resultado: ", operacoes.divisao(num1, num2))
-            input("aperte enter para prosseguir")
+visor = tk.Text(janela, height=2, font=("Heveltica", 16))
+visor.grid(row=0, column=0, columnspan=4)
 
-        else:
-            print("opção invalida, tente novamente")
+botoes = [
+    ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("/", 1, 3),
+    ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("*", 2, 3),
+    ("1", 3, 0), ("2", 3, 1), ("3", 3, 2), ("-", 3, 3),
+    ("0", 4, 0), (".", 4, 1), ("+", 4,3)
+]
 
-calculadora()
+for btn in botoes:
+    text, row, col = btn
+    tk.Button(
+        janela,
+        text=text,
+        font=("Heveltica", 16),
+        command=lambda
+        t = text: atualizar_visor(t)
 
+    ).grid(row=row, column=col)
+
+
+tk.Button(
+        janela,
+        text="C",
+        font=("Heveltica", 16),
+        fg="red",
+        command=limpar
+    ).grid(
+        row = 5,
+        column= 0,
+        columnspan=4
+    )
+tk.Button(
+        janela,
+        text="=",
+        font=("Heveltica", 16),
+        fg="red",
+        command=calcular
+    ).grid(
+        row = 5,
+        column= 2
+    )
+
+janela.mainloop()
